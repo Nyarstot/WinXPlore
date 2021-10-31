@@ -43,7 +43,7 @@ function WinXPlore_GlobalSlashChecker {
 }
 
 function WinXPlore_TableOfDirectoryContent {
-    Get-ChildItem -Path $currentDirectory |
+    Get-ChildItem -Path $global:currentDirectory |
     Select-Object -Property BaseName, Extension, Length |
     Format-Table -AutoSize -Wrap
 }
@@ -53,7 +53,9 @@ function WinXPlore_ShowDependencies {
         $Path
     )
     $tmpPath = [string]::Concat($global:currentDirectory, $Path)
-    Start-Process -PassThru $tmpPath | Get-Process -Module
+    
+    Start-Process -PassThru $tmpPath | Get-Process -Module |
+    Format-Table -AutoSize -Wrap
 }
 
 function WinXPlore_ChangeDirectory {
@@ -64,6 +66,7 @@ function WinXPlore_ChangeDirectory {
     $testDir = $Path
     if (WinXPlore_CheckPath -Path $testDir == $true) {
         $global:currentDirectory = $testDir
+        WinXPlore_GlobalSlashChecker
         Write-Host "New directory has been successfully set" -ForegroundColor green
     } else {
         Write-Host "The directory does not exist or is not written correctly" -ForegroundColor -red
