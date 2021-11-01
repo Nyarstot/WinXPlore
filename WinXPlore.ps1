@@ -53,9 +53,12 @@ function WinXPlore_ShowDependencies {
         $Path
     )
     $tmpPath = [string]::Concat($global:currentDirectory, $Path)
-    
+    $date = Get-Date -Format "MM_dd_yyyy_HHmm"
+    $logName = [string]::Concat($Path, "_", $date)
+
     Start-Process -PassThru $tmpPath | Get-Process -Module |
-    Format-Table -AutoSize -Wrap
+    Format-Table -AutoSize -Wrap | Out-File -FilePath ./out/$logName.txt
+    Get-Content -Path ./out/$logName.txt
 }
 
 function WinXPlore_ChangeDirectory {
